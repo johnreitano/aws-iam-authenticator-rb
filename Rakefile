@@ -34,6 +34,17 @@ task :build do
   end
 end
 
+task :publish do
+  require 'aws-iam-authenticator-rb/version'
+
+  Dir.glob(File.join('pkg', "aws-iam-authenticator-rb-#{AwsIamAuthenticatorRb::VERSION}-*.gem")).each do |pkg|
+    puts "Publishing #{pkg}"
+    STDOUT.write("Enter OTP code: ")
+    otp = STDIN.gets.strip
+    system("gem push -k rubygems --otp #{otp} #{pkg}")
+  end
+end
+
 task default: :spec
 
 desc 'Run specs'
